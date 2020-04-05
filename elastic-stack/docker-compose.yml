@@ -8,12 +8,13 @@ services:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - data01:/usr/share/elasticsearch/data
+      - ~/docker_data/elasticsearch:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -35,14 +36,14 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:7.6.2
     container_name: logstash
+    ports:
+      - 5044:5044
+      - 9600:9600
     networks:
         - elastic
     depends_on: 
         - elasticsearch  
-volumes:
-  data01:
-    driver: local
-
+        
 networks:
   elastic:
     driver: bridge
